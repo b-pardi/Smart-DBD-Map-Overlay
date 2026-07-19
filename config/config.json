@@ -1,0 +1,29 @@
+{
+  "hud_key": "tab",
+  "ocr_region": {
+    "center_x_frac": 0.5,
+    "top_frac": 0.86,
+    "width_frac": 0.4,
+    "height_frac": 0.08
+  },
+  "cooldown": {
+    "max_reads": 3,
+    "window_s": 3.0,
+    "post_press_delay_s": 0.02
+  },
+  "overlay": {
+    "style": "grid",
+    "size": 250,
+    "opacity": 0.5,
+    "x": null,
+    "y": null,
+    "monitor": 0
+  },
+  "hotkeys": {
+    "toggle_overlay": "F9",
+    "cycle_variation": "F10",
+    "toggle_style": "F11",
+    "force_read": "F12"
+  },
+  "preferred_variation": ""
+}

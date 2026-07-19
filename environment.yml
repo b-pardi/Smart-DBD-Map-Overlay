@@ -1,0 +1,16 @@
+name: dbdmap-map
+channels:
+  - conda-forge
+dependencies:
+  - python=3.11
+  - tesserocr
+  - libblas=*=*openblas
+  - numpy
+  - opencv
+  - pillow
+  - requests
+  - tqdm
+  - pip
+  - pip:
+      - mss
+      - customtkinter
