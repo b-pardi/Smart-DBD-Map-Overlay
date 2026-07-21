@@ -1,4 +1,4 @@
-name: dbdmap-map
+name: dbdmap-env
 channels:
   - conda-forge
 dependencies:

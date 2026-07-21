@@ -2,9 +2,15 @@
   "hud_key": "tab",
   "ocr_region": {
     "center_x_frac": 0.5,
-    "top_frac": 0.86,
+    "top_frac": 0.79,
     "width_frac": 0.4,
-    "height_frac": 0.08
+    "height_frac": 0.075
+  },
+  "anchor_region": {
+    "left_px_at_1440": 150,
+    "top_px_at_1440": 60,
+    "width_px_at_1440": 650,
+    "height_px_at_1440": 90
   },
   "cooldown": {
     "max_reads": 3,
@@ -12,7 +18,7 @@
     "post_press_delay_s": 0.02
   },
   "overlay": {
-    "style": "grid",
+    "creator": "",
     "size": 250,
     "opacity": 0.5,
     "x": null,
@@ -22,7 +28,7 @@
   "hotkeys": {
     "toggle_overlay": "F9",
     "cycle_variation": "F10",
-    "toggle_style": "F11",
+    "cycle_creator": "F11",
     "force_read": "F12"
   },
   "preferred_variation": ""
