@@ -38,7 +38,7 @@ a = Analysis(
         (str(PROJECT / "config" / "config.json"), "config"),
         (str(tessdata / "eng.traineddata"), "tessdata"),
     ],
-    hiddenimports=["tesserocr"],
+    hiddenimports=["tesserocr", "src.version"],  # version is the update-check source of truth
     hookspath=[],
     excludes=["customtkinter", "matplotlib", "PyQt5", "PySide6", "IPython"],
     noarchive=False,

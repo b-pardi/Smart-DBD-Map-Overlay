@@ -16,6 +16,7 @@ from ctypes import wintypes
 from src import capture, config_io, keywatch
 from src.overlay import DebugOverlay, OverlayWindow, frame_count
 from src.paths import data_dir, ensure_user_dirs, maps_present
+from src.version import __version__
 
 _user32 = ctypes.windll.user32
 _kernel32 = ctypes.windll.kernel32
@@ -261,6 +262,7 @@ class Controller:
         self.hotkeys.start()
         self._keep_signals_alive()
         hk = self.cfg.get("hotkeys", {})
+        print(f"smart-dbd-map-overlay {__version__}")
         print(
             "running. tap your HUD key (Tab) to open the scoreboard, it reads the "
             "map while the HUD is up. tap Tab again to stop looking."
@@ -299,6 +301,7 @@ def main():
         "--debug", action="store_true",
         help="draw the OCR region rectangles and log every read attempt"
     )
+    ap.add_argument("--version", action="version", version=f"%(prog)s {__version__}")
     args = ap.parse_args()
     ensure_user_dirs()
     if not _ensure_maps():
