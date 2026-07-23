@@ -1,17 +1,18 @@
-## Work In Progress do not use
+## DBD Smart Map Overlay
+### v0.1.0-alpha
 
-## v0.1.0-alpha
+Looping in a SWF game has never been easier. Literally hit tab once in your game and in under a second you will see a map overlay. On first run it will ask if you want to download the maps. You should confirm it can do that. Otherwise it will have no maps to display. I really don't think I need to explain that further. 
 
-Looping in a SWF game has never been easier. Literally hit tab once in your game and in under a second you will see a map overlay.
-Scrapes map layouts from the wiki and draws either a clock layout (Hen333 style) or 3x3 grid layout (simpler KaiserAleex style)
+Yes yes I know another person has made a map overlay, but the auto map detection was problematic and I believe I have a better way to do it. This project aims to make OCR-based auto map detection work more consistently, and also with extra features later (See [README.md](https://github.com/b-pardi/Smart-DBD-Map-Overlay/blob/main/README.md) for more details)
 
-The option to use community made maps directly exists, however new maps will not be available until creators upload their maps.
-The idea of the automated overlay generation is to circumvent the wait period between a new map and a creator releasing new maps that then need to be added and updated constantly.
+> [!IMPORTANT]
+> Run DBD in borderless windowed. Exclusive fullscreen eats overlays for breakfast. Non-negotiable, same as every overlay ever made.
 
-> notice: The map overlays are **NOT** AI generated. dbd-smart-map generates the maps from the dbd wiki, and uses deterministic algorithms (e.g. Canny edge detection, Otsu thresholding, etc.) to draw onto the wiki map. dbd-smart-map uses OCR (Optical Character Recognition) to read the map name on your screen, but that's the only AI / Machine Learning in this tool.
+> [!NOTE] 
+> The map overlays are **NOT** AI generated. All credits can be found in [attributions.md](https://github.com/b-pardi/Smart-DBD-Map-Overlay/blob/main/attributions.md)
 
 **To run:**
-1. Download the zip folder below.
+1. Download the exe below.
     - Under the 'Assets' drop down menu at the bottom of this page.
 2. Extract the folder `dbd-smart-map` anywhere on your computer. 
     - **DO NOT** extract _only_ the exe, keep the .exe file and _internal folder together when running.
@@ -20,6 +21,8 @@ The idea of the automated overlay generation is to circumvent the wait period be
 
 - **See [README.md](https://github.com/b-pardi/Smart-DBD-Map-Overlay/blob/main/README.md) [FAQ.md](https://github.com/b-pardi/Smart-DBD-Map-Overlay/blob/main/FAQ.md) or [CHANGELOG.md](https://github.com/b-pardi/Smart-DBD-Map-Overlay/blob/main/CHANGELOG.md) for more details**
 
-> notice: dbd runs easy anti-cheat in menus too, technically this is illegal, but similar projects have had no issues. So while I can't guarantee your safety, you'll live.
->
-> note: run dbd in borderless (windowed fullscreen), not exclusive fullscreen. exclusive fullscreen returns black screen-captures, can swallow the synthesized clicks, and blocks the global kill-switch hotkey. borderless looks identical and makes capture, clicking, and the f7/f8 hotkeys all work.
+> [!CAUTION]
+> dbd runs easy anti-cheat in menus too, technically this is illegal, but similar projects have had no issues. I guarantee nothing, but you can use your own judgement
+
+> [!IMPORTANT]  
+> This exe isn't code-signed because I'm poor and make no money off of this. Windows smartscreen will probably warn on first launch since there are packages used to read your screen and m/k input. Don't worry, `DBD Smart Map Overlay` Only looks at your tab button being pressed, two fixed locations on your screen, and horizontal mouse movement only. If you trust this humble dbd/programming enthusiast, click "more info" then "run anyway". If defender quarantines it, allow it. Or don't, I'm not your dad.
