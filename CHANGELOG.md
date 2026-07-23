@@ -1,6 +1,6 @@
 # Changelog
 
-## v0.1.0 (unreleased)
+## v0.1.0
 
 - scraper builds the map callout index from hens333.com and allmyperks.com, keyed on reference wiki names
 - key watch plus screen capture read the map name off the tab menu, gated so it only reads while the menu is up
