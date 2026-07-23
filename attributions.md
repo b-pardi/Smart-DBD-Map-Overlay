@@ -8,7 +8,7 @@ The overlay images this app shows are made by the community, not by me. They are
 downloaded from the creators' own sites and shown with credit. The in-app map
 picker lets you switch between creators per map.
 
-- **Lethia** - the callout art served on Hens333's callouts page.
+- **Hens333** - the callout art served on Hens333's callouts page.
 - **Broosley, Evo, and Zexov** - built and maintain the Hens333 callouts web tool
   (originally by Broosley and Evo in Hens' Discord, current build by Zexov).
   https://hens333.com/callouts
@@ -24,7 +24,7 @@ picker lets you switch between creators per map.
 
 ## Map and realm names
 
-- **Dead by Daylight Wiki (deadbydaylight.wiki.gg) contributors** - canonical map
+- **Dead by Daylight Wiki (deadbydaylight.wiki.gg) contributors** - reference map
   and realm names used to match the in-game HUD. https://deadbydaylight.wiki.gg
 
 ## Game

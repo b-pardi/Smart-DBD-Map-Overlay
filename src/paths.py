@@ -52,3 +52,8 @@ def config_path():
 def ensure_user_dirs():
     for d in (data_dir(), outlines_dir(), callouts_dir(), cache_dir()):
         d.mkdir(parents=True, exist_ok=True)
+
+
+def maps_present():
+    """maps downloaded, the exe ships without them and fetches on first run"""
+    return maps_index_path().exists()

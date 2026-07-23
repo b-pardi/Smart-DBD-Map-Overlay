@@ -1,9 +1,7 @@
 """import tesserocr with its dlls resolved, plus the shared api cache
 
-port of the auto-spender's ocr_runtime with the tessdata lookup and cached
-PyTessBaseAPI moved in here so callout_gen and capture share one loader.
-no hardcoded paths: the dll dir derives from sys.prefix (conda dev env) or
-the pyinstaller bundle dir (frozen)
+the tessdata lookup and cached PyTessBaseAPI live here so callout_gen and capture share one loader.
+no hardcoded paths: the dll dir derives from sys.prefix (conda dev env) or the pyinstaller bundle dir (frozen)
 """
 
 import os
@@ -24,8 +22,8 @@ def get_tesserocr():
     """import and return the tesserocr module, wiring up its dlls first
 
     windows gotchas this fixes:
-    1. tesserocr.pyd's dlls sit in the env's Library/bin, which python 3.8+
-       no longer searches via PATH, so we add it
+    1. tesserocr.pyd's dlls sit in the env's Library/bin,
+       which python 3.8+ no longer searches via PATH, so we add it
     2. conda's libtiff links libdeflate.dll but only ships deflate.dll,
        same lib different filename, so we make the alias once
     """

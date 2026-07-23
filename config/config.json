@@ -12,10 +12,11 @@
     "width_px_at_1440": 650,
     "height_px_at_1440": 90
   },
-  "cooldown": {
-    "max_reads": 3,
-    "window_s": 3.0,
-    "post_press_delay_s": 0.02
+  "scan": {
+    "post_press_delay_s": 0.05,
+    "retry_interval_s": 0.15,
+    "max_retries": 3,
+    "rescan_cooldown_s": 1.0
   },
   "overlay": {
     "creator": "",
@@ -29,7 +30,9 @@
     "toggle_overlay": "F9",
     "cycle_variation": "F10",
     "cycle_creator": "F11",
-    "force_read": "F12"
+    "force_read": "F6",
+    "move_overlay": "F8",
+    "quit": "F7"
   },
   "preferred_variation": ""
 }

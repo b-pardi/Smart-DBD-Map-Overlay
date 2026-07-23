@@ -37,6 +37,8 @@ MANIFEST
 #   before PyInstaller builds the exe, so as to inject date/other infos into it.
 *.manifest
 *.spec
+# our release spec is hand-maintained, keep it tracked
+!smart-dbd-map-overlay.spec
 
 # Installer logs
 pip-log.txt

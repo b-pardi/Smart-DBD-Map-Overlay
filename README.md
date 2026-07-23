@@ -8,14 +8,12 @@ It watches for the map name on the Tab scoreboard, and only when you actually pr
 
 There's already a good one (LucaFontanot/dbd-map-overlay) and it inspired this. Its one sin: it OCRs the loading screen on a 1 second loop with very loose matching, so one half-garbled frame yeets you onto the wrong map roughly constantly. We fix that by only reading when you press Tab, from a fixed spot, with strict matching. Read once, be confident, shut up.
 
-Second thing: the DBD wiki has lovely map outlines that politely forget to mark where shack is, which is, you know, the entire damn point of a callout. Generating our own labels was a dead end (you can't invent a landmark that isn't in the source), so we just grab the real callout maps from the people who actually draw them.
-
 ## Status
 
 Early. Honest version:
 
-- Done: scaffolding, config defaults, and the scraper. It auto-downloads every callout from hens333.com and allmyperks.com, converts anything weird to webp, and builds a name index for the OCR to match against.
-- Not done: the OCR, the overlay window, the settings UI, the exe. So right now it downloads a pile of maps and does absolutely nothing with them. Baby steps.
+- Done: scaffolding, config defaults, the scraper (auto-downloads every callout from hens333.com and allmyperks.com, converts anything weird to webp, builds a name index), the event-driven OCR that reads the map off the Tab scoreboard, and the overlay window itself (transparent, click-through, always-on-top, with hotkeys). The pieces all work and talk to each other.
+- Not done: the settings UI, the heading arrow, and the exe. The end-to-end run against a live match still wants a proper shakedown. Getting there.
 
 ## Requirements
 
@@ -33,16 +31,28 @@ python -m src.scraper
 
 That pulls the callout maps into `data/maps/` with progress bars and writes `data/maps_index.json`. Add `--force` to refresh, or `--source hens333` if you're feeling picky.
 
+## Build the exe
+
+Terminal only, one file, Windows. From inside the conda env, with the maps already scraped:
+
+```
+pip install pyinstaller
+./build.ps1
+```
+
+Out comes `dist/smart-dbd-map-overlay.exe`. It bundles tesseract, its dlls, the eng traineddata, and the config seed, but not the maps, so it stays small. First launch checks `%APPDATA%\smart-dbd-map-overlay\` for the callouts and, if they're missing, asks before downloading them (about 25 mb from hens333.com and allmyperks.com). Say no and it just exits. SmartScreen will scream because it's unsigned. It screams at everything. Ignore it.
+
 ## Where the maps come from
 
-Real people who draw these for free: Lethia (through hens333.com), plus EagerFace, KaiserAleex, SamoelColt and others (through allmyperks.com). Map and realm names come from the DBD wiki. Full credits in `attributions.md`. Go be nice to them.
+Real people who draw these for free: hens (through hens333.com), plus EagerFace, KaiserAleex, SamoelColt and others (through allmyperks.com). Map and realm names come from the DBD wiki. Full credits in `attributions.md`. Go be nice to them.
 
 ## Roadmap (the big stuff)
 
 - [x] Scaffold, config, attributions
-- [x] Scraper: grab every creator automatically, webp-ify, index by canonical map name
-- [ ] Event-driven OCR: read `REALM - MAP` off the Tab scoreboard, gated on a real keypress, strict match, zero misfires
-- [ ] Overlay window: transparent, click-through, always-on-top, with hotkeys to cycle creator and variation
+- [x] Scraper: grab every creator automatically, webp-ify, index by reference map name
+- [x] Event-driven OCR: read `REALM - MAP` off the Tab scoreboard, gated on a real keypress, strict match, zero misfires
+- [x] Overlay window: transparent, click-through, always-on-top, with hotkeys to cycle creator and variation, drag-to-place, and multi-floor maps
+- [ ] Prove it end to end in a live match and iron out whatever the game does that the fixtures didn't
 - [ ] Heading arrow: a compass that tracks which way you're looking (mouse-integrated, so a bit drifty, and it will need re-zeroing), plus a manual rotate key. No spinning map, no fake "you are here" dot. Those would be lies, and reading game memory to do them properly is a one-way ticket to a ban.
 - [ ] Settings GUI: pick creator, opacity, size, hotkeys, and calibrate the OCR region without hand-editing JSON like it's 2004
 - [ ] Ship an exe plus an auto-updater so normal humans can run it. SmartScreen will scream. It screams at everything unsigned. Ignore it.

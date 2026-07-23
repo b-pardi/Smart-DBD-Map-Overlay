@@ -1,11 +1,10 @@
 """scrape pre-made callout overlays from hens333.com and allmyperks.com
 
-realm/map names still come from the wiki's lua Module:Datatable so
-the ocr matcher keeps clean names and aliases, but the map art is now the
-community callout images (which actually mark shack/main) instead of the old
-self-generated grid/clock overlays. each scraped image is reconciled onto a
-map by name, then written to data/maps/<creator>/<Realm>/<file>
-alongside data/maps_index.json
+realm and map names come from the wiki's lua Module:Datatable,
+so the ocr matcher keeps clean names and aliases.
+the map art is the community callout images that mark shack and main.
+each scraped image is reconciled onto a map by name,
+then written to data/maps/<creator>/<Realm>/<file> alongside data/maps_index.json
 """
 
 import argparse
@@ -13,7 +12,6 @@ import difflib
 import json
 import re
 import time
-import unicodedata
 from datetime import datetime, timezone
 from urllib.parse import quote
 
@@ -23,6 +21,7 @@ from urllib3.util.retry import Retry
 from tqdm import tqdm
 
 from src import paths
+from src.textnorm import normalize
 
 API = "https://deadbydaylight.wiki.gg/api.php"
 UA = "smart-dbd-map-overlay/0.1 (contact: brandonpardi24@gmail.com)"
@@ -101,8 +100,10 @@ def _cached_fetch(session, cache_name, force, fetch):
 
 def fetch_datatable(session, force=False):
     def fetch(s):
-        data = _api_get(s, action="query", prop="revisions", titles="Module:Datatable",
-                        rvprop="content", rvslots="main")
+        data = _api_get(
+            s, action="query", prop="revisions", titles="Module:Datatable",
+            rvprop="content", rvslots="main"
+        )
         return data["query"]["pages"][0]["revisions"][0]["slots"]["main"]["content"]
     return _cached_fetch(session, "Datatable.lua", force, fetch)
 
@@ -179,14 +180,6 @@ def parse_lua_table(lua_src, varname):
     return table
 
 
-def normalize(text):
-    """shared ocr-side name normalization, fold case, accents, punctuation"""
-    s = unicodedata.normalize("NFKD", text)
-    s = "".join(c for c in s if not unicodedata.combining(c))
-    s = re.sub(r"[^a-z0-9\s]", " ", s.lower())
-    return " ".join(s.split())
-
-
 def _key(text):
     """punctuation and space insensitive match key, folds 'azarov s' == 'azarovs'"""
     return normalize(text).replace(" ", "")
@@ -223,8 +216,8 @@ def build_catalog(realms, maps):
 def build_matcher(catalog):
     """(key2entry, norm2entry) lookups for reconciling source names onto canon
 
-    keys cover the map name, its alt names, and a leading-'the' stripped form so
-    slugs like 'thompson-house' still reach 'The Thompson House'
+    keys cover the map name, its alt names, and a leading-'the' stripped form,
+    so slugs like 'thompson-house' still reach 'The Thompson House'
     """
     key2entry, norm2entry = {}, {}
     for e in catalog:
@@ -264,7 +257,7 @@ def _hens_variation(stem):
 
 
 def scrape_hens(session):
-    """overlay records from hens333, one creator (Lethia), realm folder ignored"""
+    """overlay records from hens333, one creator (hens), realm folder ignored"""
     html = _get_text(session, HENS_PAGE)
     records = {}
     for path in re.findall(r'data-path="([^"]+)"', html):
@@ -272,7 +265,7 @@ def scrape_hens(session):
         stem, _, ext = fname.rpartition(".")
         name, label = _hens_variation(stem)
         records[path] = {
-            "source": "hens333", "creator": "Lethia",
+            "source": "hens333", "creator": "hens",
             "name": name, "label": label, "ext": ext,
             "url": HENS_IMG_BASE + quote(path),
         }
@@ -282,8 +275,9 @@ def scrape_hens(session):
 def scrape_allmyperks(session):
     """per-creator overlay records across every /maps/<slug> detail page
 
-    map identity comes from the page slug, not the asset filename, so a stray
-    thumbnail can't misfile an overlay. label is the trailing -N when present
+    map identity comes from the page slug, not the asset filename,
+    so a stray thumbnail can't misfile an overlay.
+    label is the trailing -N when present
     """
     html = _get_text(session, AMP_LIST)
     slugs = sorted(set(re.findall(r'href="/maps/([^"/]+)"', html)))
@@ -310,8 +304,8 @@ def _safe(name):
 def _encode_to_target(content, src_ext):
     """image bytes in the store format, raw passthrough when already there
 
-    keeps every frame (midwich is multi-floor) and preserves alpha, a jpeg
-    target flattens alpha onto black since the format can't carry it
+    keeps every frame (midwich is multi-floor) and preserves alpha,
+    a jpeg target flattens alpha onto black since the format can't carry it
     """
     if src_ext.lower() == TARGET_EXT:
         return content
@@ -349,8 +343,10 @@ def attach_overlays(catalog, records, matcher, map_filter=None):
             continue
         stem = e["name"] if r["label"] in ("I", "1") else f"{e['name']} {r['label']}"
         rel = f"maps/{_safe(r['creator'])}/{_safe(e['realm'])}/{_safe(stem)}.{TARGET_EXT}"
-        e["overlays"].append({"creator": r["creator"], "source": r["source"],
-                              "label": r["label"], "file": rel})
+        e["overlays"].append({
+            "creator": r["creator"], "source": r["source"],
+            "label": r["label"], "file": rel,
+        })
         downloads.append((r["url"], rel, r["ext"]))
     return warnings, downloads
 
@@ -376,8 +372,10 @@ def download_all(session, downloads, force=False):
         dest.parent.mkdir(parents=True, exist_ok=True)
         dest.write_bytes(data)
         done += 1
-    print(f"overlays: {done} downloaded ({converted} converted to {TARGET_EXT}), "
-          f"{skipped} cached, {failed} failed")
+    print(
+        f"overlays: {done} downloaded ({converted} converted to {TARGET_EXT}), "
+        f"{skipped} cached, {failed} failed"
+    )
 
 
 def write_index(catalog, realms, sources):
