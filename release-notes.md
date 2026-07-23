@@ -1,5 +1,5 @@
 ## DBD Smart Map Overlay
-### v0.1.0-alpha
+### v0.1.1-alpha
 
 Looping in a SWF game has never been easier. Literally hit tab once in your game and in under a second you will see a map overlay. On first run it will ask if you want to download the maps. You should confirm it can do that. Otherwise it will have no maps to display. I really don't think I need to explain that further. 
 

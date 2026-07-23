@@ -38,7 +38,7 @@ MANIFEST
 *.manifest
 *.spec
 # our release spec is hand-maintained, keep it tracked
-!smart-dbd-map-overlay.spec
+!dbd-smart-map-overlay.spec
 
 # Installer logs
 pip-log.txt

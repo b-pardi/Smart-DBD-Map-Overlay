@@ -10,7 +10,6 @@ every real incident should earn a check here
 import json
 import sys
 
-import cv2
 import numpy as np
 from PIL import Image, ImageDraw, ImageFont
 
@@ -93,7 +92,7 @@ def check_fixture_reads():
         p = paths.resource_path("fixtures") / f"{stem}.jpg"
         if not p.exists():
             return SKIP, f"fixture {stem}.jpg absent"
-        frame = cv2.cvtColor(cv2.imread(str(p)), cv2.COLOR_BGR2RGB)
+        frame = np.asarray(Image.open(p).convert("RGB"))
         h, w = frame.shape[:2]
         cfg = config_io.load()
         bounds = {"left": 0, "top": 0, "width": w, "height": h}

@@ -12,7 +12,6 @@ import difflib
 import json
 import threading
 
-import cv2
 import mss
 import numpy as np
 from PIL import Image
@@ -96,7 +95,7 @@ def map_region(bounds, cfg):
 def grab(region):
     """rgb crop of exactly this virtual-screen region"""
     raw = np.asarray(_sct().grab(region))  # (h, w, 4) bgra
-    return cv2.cvtColor(raw, cv2.COLOR_BGRA2RGB)
+    return np.ascontiguousarray(raw[:, :, 2::-1])  # (h, w, 3) rgb
 
 
 def crop_frame(frame_rgb, region, origin=(0, 0)):
@@ -106,13 +105,27 @@ def crop_frame(frame_rgb, region, origin=(0, 0)):
     return frame_rgb[t:t + region["height"], l:l + region["width"]]
 
 
+def _otsu(gray):
+    """otsu threshold from the 256-bin histogram, the value maximizing between-class variance"""
+    hist = np.bincount(gray.ravel(), minlength=256).astype(np.float64)
+    w0 = np.cumsum(hist)
+    w1 = gray.size - w0
+    levels = np.arange(256)
+    m0 = np.cumsum(levels * hist)
+    mean0 = m0 / np.maximum(w0, 1)
+    mean1 = (m0[-1] - m0) / np.maximum(w1, 1)
+    between = w0 * w1 * (mean0 - mean1) ** 2
+    return int(np.argmax(between))
+
+
 def preprocess(img_rgb, upscale):
     """gray, cubic upscale, otsu to black text on white for tesseract"""
-    gray = cv2.cvtColor(img_rgb, cv2.COLOR_RGB2GRAY)
+    im = Image.fromarray(img_rgb).convert("L")
     if upscale != 1:
-        gray = cv2.resize(gray, None, fx=upscale, fy=upscale, interpolation=cv2.INTER_CUBIC)
-    _, binimg = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY_INV | cv2.THRESH_OTSU)
-    return binimg
+        im = im.resize((im.width * upscale, im.height * upscale), Image.BICUBIC)
+    gray = np.asarray(im)
+    # dbd hud is light text on dark, so invert past otsu for black on white
+    return np.where(gray > _otsu(gray), 0, 255).astype(np.uint8)
 
 
 def _ocr(img_rgb, psm_name, upscale):

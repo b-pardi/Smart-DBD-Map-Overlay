@@ -1,5 +1,8 @@
 # Changelog
 
+## v0.1.1
+- reduced exe size by removing opencv replacing its uses with pillow and numpy
+
 ## v0.1.0
 
 - scraper builds the map callout index from hens333.com and allmyperks.com, keyed on reference wiki names

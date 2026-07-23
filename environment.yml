@@ -6,7 +6,6 @@ dependencies:
   - tesserocr
   - libblas=*=*openblas
   - numpy
-  - opencv
   - pillow
   - requests
   - tqdm
