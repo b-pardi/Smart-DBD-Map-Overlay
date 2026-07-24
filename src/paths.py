@@ -41,6 +41,15 @@ def cache_dir():
     return data_dir() / ".cache"
 
 
+def logs_dir():
+    """where the overlay's stdout is teed so the gui debug panel can tail it"""
+    return user_base() / "logs"
+
+
+def overlay_log_path():
+    return logs_dir() / "overlay.log"
+
+
 def maps_index_path():
     return data_dir() / "maps_index.json"
 

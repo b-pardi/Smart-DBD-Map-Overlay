@@ -10,11 +10,16 @@ import sys
 
 
 def _fix_streams():
-    # windowed pyinstaller build has no console, writes to None would crash
-    if sys.stdout is None or sys.stderr is None:
-        null = open(os.devnull, "w")
-        sys.stdout = sys.stdout or null
-        sys.stderr = sys.stderr or null
+    # windowed pyinstaller build hands None for stdout/stderr, writes to None would crash. bind to the real
+    # fd first so a redirected launch (the gui tees us to a log) is honored, only then fall back to null
+    for name, fd in (("stdout", 1), ("stderr", 2)):
+        if getattr(sys, name) is not None:
+            continue
+        try:
+            stream = os.fdopen(fd, "w", buffering=1, encoding="utf-8", errors="replace")
+        except OSError:
+            stream = open(os.devnull, "w")
+        setattr(sys, name, stream)
 
 
 def _dpi_aware():

@@ -19,12 +19,17 @@
     "rescan_cooldown_s": 1.0
   },
   "overlay": {
-    "creator": "",
+    "auto_mode": true,
+    "map": "",
+    "creator": "hens",
     "size": 250,
     "opacity": 0.5,
     "x": null,
     "y": null,
     "monitor": 0
+  },
+  "ui": {
+    "scale": 1.15
   },
   "hotkeys": {
     "toggle_overlay": "F9",

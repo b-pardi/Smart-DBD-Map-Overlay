@@ -1,5 +1,5 @@
 ## DBD Smart Map Overlay
-### v0.1.1-alpha
+### v0.2.0-alpha
 
 Looping in a SWF game has never been easier. Literally hit tab once in your game and in under a second you will see a map overlay. On first run it will ask if you want to download the maps. You should confirm it can do that. Otherwise it will have no maps to display. I really don't think I need to explain that further. 
 
@@ -12,12 +12,9 @@ Yes yes I know another person has made a map overlay, but the auto map detection
 > The map overlays are **NOT** AI generated. All credits can be found in [attributions.md](https://github.com/b-pardi/Smart-DBD-Map-Overlay/blob/main/attributions.md)
 
 **To run:**
-1. Download the exe below.
+1. Download the dbd-smart-map-overlay.exe below.
     - Under the 'Assets' drop down menu at the bottom of this page.
-2. Extract the folder `dbd-smart-map` anywhere on your computer. 
-    - **DO NOT** extract _only_ the exe, keep the .exe file and _internal folder together when running.
-3. Run `dbdbp.exe` from whatever folder you extracted it the zip into.
-4. View the 'Instructions' tab in the UI to get started.
+2. Run `dbdbp.exe` from whatever folder you extracted it the zip into.
 
 - **See [README.md](https://github.com/b-pardi/Smart-DBD-Map-Overlay/blob/main/README.md) [FAQ.md](https://github.com/b-pardi/Smart-DBD-Map-Overlay/blob/main/FAQ.md) or [CHANGELOG.md](https://github.com/b-pardi/Smart-DBD-Map-Overlay/blob/main/CHANGELOG.md) for more details**
 

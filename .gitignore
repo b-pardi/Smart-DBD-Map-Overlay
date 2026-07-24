@@ -4,6 +4,9 @@ fixtures/*
 data/*
 !data/.gitkeep
 
+# overlay stdout tee, created at runtime when run from source
+logs/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[codz]

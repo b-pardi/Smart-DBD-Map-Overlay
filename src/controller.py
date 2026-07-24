@@ -9,6 +9,7 @@ a read never freezes the overlay. one read at a time (a busy read is skipped).
 import argparse
 import ctypes
 import signal
+import sys
 import threading
 import tkinter as tk
 from ctypes import wintypes
@@ -74,8 +75,13 @@ class Controller:
     def __init__(self, cfg, debug=False):
         self.cfg = cfg
         self.debug = debug
-        self.monitor = cfg.get("overlay", {}).get("monitor", 0)
-        self.matcher = capture.build_matcher(capture.load_index())
+        o = cfg.get("overlay", {})
+        self.monitor = o.get("monitor", 0)
+        # auto mode watches the HUD key and OCRs the map, manual mode just shows one chosen map
+        self.auto_mode = o.get("auto_mode", True)
+        self.manual_map = o.get("map", "")
+        self.index = capture.load_index()
+        self.matcher = capture.build_matcher(self.index)
         self.entry = None
         self.creator_i = 0
         self.views = []  # flattened (overlay record, frame index) for the creator
@@ -161,6 +167,8 @@ class Controller:
         return False
 
     def _force_read(self):
+        if not self.auto_mode:
+            return  # manual mode has no ocr to force
         threading.Thread(target=self._do_read, daemon=True).start()
 
     def _on_no_match(self):
@@ -179,6 +187,19 @@ class Controller:
         self._build_views()
         self.view_i = self._preferred_view_i()
         self._render()
+
+    def _entry_by_name(self, name):
+        return next((e for e in self.index["maps"] if e["name"] == name), None)
+
+    def _load_manual_map(self):
+        # manual mode shows one chosen map, rendered up front then hidden until the toggle key reveals it
+        entry = self._entry_by_name(self.manual_map) if self.manual_map else None
+        if entry is None:
+            maps = self.index["maps"]
+            entry = maps[0] if maps else None
+        if entry:
+            self._on_match(entry)
+            self.overlay.set_visible(False)
 
     def _preferred_creator_i(self, entry):
         want = self.cfg.get("overlay", {}).get("creator", "")
@@ -258,15 +279,24 @@ class Controller:
 
     def run(self):
         signal.signal(signal.SIGINT, self._sigint)
-        self.keywatch.start()
+        if self.auto_mode:
+            self.keywatch.start()
+        else:
+            self._load_manual_map()
         self.hotkeys.start()
         self._keep_signals_alive()
         hk = self.cfg.get("hotkeys", {})
         print(f"smart-dbd-map-overlay {__version__}")
-        print(
-            "running. tap your HUD key (Tab) to open the scoreboard, it reads the "
-            "map while the HUD is up. tap Tab again to stop looking."
-        )
+        if self.auto_mode:
+            print(
+                "running. tap your HUD key (Tab) to open the scoreboard, it reads the "
+                "map while the HUD is up. tap Tab again to stop looking."
+            )
+        else:
+            print(
+                f"manual mode, auto ocr off. showing {self.manual_map or 'the first map'}, "
+                f"tap {hk.get('toggle_overlay')} to show or hide it."
+            )
         print(
             f"  {hk.get('toggle_overlay')} toggle  {hk.get('cycle_creator')} creator  "
             f"{hk.get('cycle_variation')} variation  {hk.get('force_read')} force read  "
@@ -277,19 +307,25 @@ class Controller:
         try:
             self.root.mainloop()
         finally:
-            self.keywatch.stop()
+            if self.auto_mode:
+                self.keywatch.stop()
             self.hotkeys.stop()
 
 
 def _ensure_maps():
-    # the exe ships without callouts, fetch them once with the user's ok
+    # the exe ships without callouts, fetch them once
     if maps_present():
         return True
     print("map callouts are not downloaded yet.")
     print("they come from hens333.com and allmyperks.com, about 25 mb.")
-    if input("download them now? [y/N] ").strip().lower() not in ("y", "yes"):
-        print("exiting, nothing to show without the maps. run again to download")
-        return False
+    # a gui launch has no console to prompt on, so proceed there and only ask when run in a terminal
+    interactive = bool(getattr(sys.stdin, "isatty", lambda: False)())
+    if interactive:
+        if input("download them now? [y/N] ").strip().lower() not in ("y", "yes"):
+            print("exiting, nothing to show without the maps. run again to download")
+            return False
+    else:
+        print("no console attached, downloading the callouts now...")
     from src import scraper
     scraper.main([])
     return maps_present()

@@ -1,7 +1,16 @@
 # Changelog
 
-## v0.1.1
+## v0.2.0
 - reduced exe size by removing opencv replacing its uses with pillow and numpy
+- initial ui build
+    - overlay page: enable/disable automode, choose map and/or creator, visualize preview, self test on shipped screenshot
+        - automode was enabled by default, added routing from ui to make automode optional
+    - controls page: change hotkeys, text size, and scan timing
+    - calibration page: move where the ocr anchor boxes will be looking if they are set wrong, and where the map overlay shows for user preference
+    - instructions page: did you really need an elaboration here?
+    - about page: buttons to check for updates, view github page, report issue, and attributions to map/game creators
+- map search by text or filters
+    - added low res map thumbnails for viewing maps in search
 
 ## v0.1.0
 
